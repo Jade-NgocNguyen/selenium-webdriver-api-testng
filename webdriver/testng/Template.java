@@ -2,8 +2,6 @@ package testng;
 
 import java.util.concurrent.TimeUnit;
 
-//import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -12,7 +10,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class Topic_01_Check_environment {
+public class Template {
 	WebDriver driver;
 
 	@BeforeClass
@@ -33,21 +31,6 @@ public class Topic_01_Check_environment {
 	public void TC_02_ValidatePageTitle() {
 		String loginPageTitle = driver.getTitle();
 		Assert.assertEquals(loginPageTitle, "Guru99 Bank Home Page");
-	}
-
-	@Test
-	public void TC_03_LoginFormDisplayed() {
-		Assert.assertTrue(driver.findElement(By.xpath("//form[@name='frmLogin']")).isDisplayed());
-	}
-
-	@Test
-	public void TC_04_LoginFormDisplayed() {
-		// Assert.assertTrue(driver.findElement(By.xpath("//form[@name='frmLogin']")).isDisplayed());
-	}
-
-	@Test
-	public void TC_05_LoginFormDisplayed() {
-		// Assert.assertTrue(driver.findElement(By.xpath("//form[@name='frmLogin']")).isDisplayed());
 	}
 
 	@AfterClass

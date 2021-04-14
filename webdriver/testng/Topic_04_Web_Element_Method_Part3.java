@@ -13,7 +13,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class Topic_03_xPath_Part1 {
+public class Topic_04_Web_Element_Method_Part3 {
 	WebDriver driver;
 
 	@BeforeClass
