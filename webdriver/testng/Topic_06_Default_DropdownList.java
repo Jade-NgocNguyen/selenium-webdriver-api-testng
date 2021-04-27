@@ -6,7 +6,10 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -66,7 +69,7 @@ public class Topic_06_Default_DropdownList {
 		driver.findElement(By.xpath("//a[text()='Register']")).click();
 		
 		//Fill registration info
-		driver.findElement(genderRadio).click();;
+		driver.findElement(genderRadio).click();
 		
 		driver.findElement(firstNameTxtbox).sendKeys(firstName);
 		
@@ -98,7 +101,9 @@ public class Topic_06_Default_DropdownList {
 		
 		
 		//Click on Register button and verify register successfully
-		driver.findElement(By.id("register-button")).click();
+		driver.findElement(By.id("register-button")).submit();
+		
+//		Assert.assertEquals(driver.findElement(By.id("register-button")).isEnabled(), true);
 		
 		Assert.assertEquals(driver.findElement(By.xpath("//div[@class='result']")).getText(), "Your registration completed");
 		
