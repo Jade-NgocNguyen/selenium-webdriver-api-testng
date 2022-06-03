@@ -178,17 +178,15 @@ public class Topic13_Javascript_Executor {
 		// Step 5: Fill in Email text field with illegal data then click on Submit and verify the validation message on Email
 		// Fill in the Email text field
 		String email = "abc";
-		this.sleepInSec(2);
 		this.sendKeyToElementByJs(this.driver, emailTxtBox, email);
 						
 		// Click on Submit
-		this.sleepInSec(2);
 		this.clickOnElementByJs(this.driver, submitBtn);
 		displayedText = this.getValidationMsgByJs(this.driver, emailTxtBox);
 		System.out.println("Acutual text:" + displayedText);
 						
 		// Verify validation msg on Email text field
-		verifiedText = "Please include the '@' in the email address.'" + email + "' is missing an '@'.";
+		verifiedText = "Please enter an email address.";
 		System.out.println("Verified text:" + verifiedText);
 		this.verifyText(displayedText, verifiedText);
 		System.out.println("End of step 5");
@@ -211,16 +209,18 @@ public class Topic13_Javascript_Executor {
 		// Step 7: Fill in Email text field with correct data then click on Submit and verify the validation message on Email
 		// Fill in the Email text field
 		email = "abc@gmail.com";
+		this.sendKeyToElementByJs(this.driver, emailTxtBox, "");
 		this.sendKeyToElementByJs(this.driver, emailTxtBox, email);
 										
 		// Click on Submit
 		this.clickOnElementByJs(this.driver, submitBtn);
 										
 		// Verify validation msg on Address field
-		xPath = "//div[@class='container']//b[text()='✱ ADDRESS ']";
-		WebElement emailDropdown = this.findElementBy(this.driver, By.xpath(xPath));
-		verifiedText = "Please an item in the list.";
-		displayedText = this.getValidationMsgByJs(this.driver, emailDropdown);
+		verifiedText = "Please select an item in the list.";
+		xPath = "//div[@class='container']//select";
+		WebElement addressDropdown = this.findElementBy(this.driver, By.xpath(xPath));
+		displayedText = this.getValidationMsgByJs(this.driver, addressDropdown);
+		System.out.println("Actual text:" + displayedText);
 		this.verifyText(displayedText, verifiedText);
 		System.out.println("End of step 7");	
 	}
