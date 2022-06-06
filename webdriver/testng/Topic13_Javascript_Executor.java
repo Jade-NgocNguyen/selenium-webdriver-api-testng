@@ -7,7 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+//import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -18,16 +19,26 @@ import org.testng.annotations.Test;
 public class Topic13_Javascript_Executor {
 	WebDriver driver;
 	JavascriptExecutor jsExecutor;
+	String prjPath;
 
 	@BeforeClass
 	public void beforeClass() {
-		driver = new FirefoxDriver();
+		prjPath = System.getProperty("user.dir");
+		// MAC
+		System.setProperty("webdriver.chrome.driver", prjPath + "/libraries/browserDriver/chromedriver");
+		
+		// Windows
+		//System.setProperty("webdriver.chrome.driver", prjPath + "\\browserDriver\\chromedriver.exe");
+		
+		//driver = new FirefoxDriver();
+		driver = new ChromeDriver();
 		jsExecutor = (JavascriptExecutor) driver;
 		
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 	}
 
+	//@Test
 	public void TC_01_JE_Executor() {
 		String URL;
 		String verifiedText;
@@ -121,7 +132,7 @@ public class Topic13_Javascript_Executor {
 		System.out.println("End of step 12");
 	}
 	
-	@Test
+	//@Test
 	public void TC_02_Verify_HMTL5_Validation_Msg() {
 		String URL;
 		String verifiedText;
@@ -225,6 +236,74 @@ public class Topic13_Javascript_Executor {
 		System.out.println("End of step 7");	
 	}
 	
+	@Test
+	public void TC_04_Remove_Attribute() {
+		String URL;
+		
+		// Step 1: navigate to site https://demo.guru99.com/v4 by JE
+		URL = "https://demo.guru99.com/v4";
+		this.navigateToURLByJs(this.driver, URL);
+		System.out.println("End of step 1");
+		
+		// Step 2: Log in with user = mngr413243, pass = EpUnupU
+		String xPath = "//form[@name='frmLogin']";
+		WebElement userID = this.findElementBy(this.driver, By.xpath(xPath + "//input[@name='uid']"));
+		WebElement password = this.findElementBy(this.driver, By.xpath(xPath + "//input[@name='password']"));
+		WebElement loginBtn = this.findElementBy(this.driver, By.xpath(xPath + "//input[@name='btnLogin']"));
+		
+		this.sendKeyToElementByJs(this.driver, userID, "mngr413243");
+		this.sendKeyToElementByJs(this.driver, password, "EpUnupU");
+		loginBtn.click();
+		System.out.println("End of step 2");
+		
+		// Step 3: Select the menu New Customer
+		xPath = "//div//a[text()='New Customer']";
+		WebElement newCustomerMenu = this.findElementBy(this.driver, By.xpath(xPath));
+		newCustomerMenu.click();
+		System.out.println("End of step 3");
+
+		// Step 4: Add new customer
+		String gender = "male";
+		String cusName = "Hello World";
+		String dob = "1960-11-06";
+		String address = "pvcombank building";
+		String city = "danang";
+		String state = "danang";
+		String pinNo = "123456";
+		String phoneNo ="0038249674";
+		String randomEmail = this.generateRandomMail();
+
+		this.findElementBy(this.driver, By.name("name")).sendKeys(cusName);
+		this.findElementBy(this.driver, By.xpath("//input[@value='m']")).click();
+		// Remove attribute of date of birth 
+		WebElement dobTxtBox = this.findElementBy(this.driver, By.name("dob"));
+		this.removeAttributeByJs(this.driver, dobTxtBox, "type");
+		dobTxtBox.sendKeys(dob);
+		this.findElementBy(this.driver, By.name("addr")).sendKeys(address);
+		this.findElementBy(this.driver, By.name("city")).sendKeys(city);
+		this.findElementBy(this.driver, By.name("state")).sendKeys(state);
+		this.findElementBy(this.driver, By.name("pinno")).sendKeys(pinNo);
+		this.findElementBy(this.driver, By.name("telephoneno")).sendKeys(phoneNo);
+		this.findElementBy(this.driver, By.name("emailid")).sendKeys(randomEmail);
+		this.findElementBy(this.driver, By.name("password")).sendKeys("EpUnupU");
+		// Submit registration info
+		this.findElementBy(this.driver, By.name("sub")).click();;
+		
+		System.out.println("End of step 4!!");
+		
+		// Step 5: Verify customer added
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//p[@class='heading3']")).getText(), "Customer Registered Successfully!!!");
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='Customer Name']/following-sibling::td")).getText(), cusName);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='Gender']/following-sibling::td")).getText(), gender);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='Birthdate']/following-sibling::td")).getText(), dob);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='Address']/following-sibling::td")).getText(), address);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='City']/following-sibling::td")).getText(), city);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='State']/following-sibling::td")).getText(), state);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='Pin']/following-sibling::td")).getText(), pinNo);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='Mobile No.']/following-sibling::td")).getText(), phoneNo);
+		this.verifyText(this.findElementBy(this.driver, By.xpath("//td[text()='Email']/following-sibling::td")).getText(), randomEmail);
+	}
+	
 	public WebElement findElementBy(WebDriver driver, By by) {
 		return driver.findElement(by);
 	}
@@ -272,6 +351,11 @@ public class Topic13_Javascript_Executor {
 	public String getValidationMsgByJs(WebDriver driver, WebElement element) {
 		jsExecutor = (JavascriptExecutor)driver;
 		return (String)jsExecutor.executeScript("return arguments[0].validationMessage;", element); 
+	}
+	
+	public void removeAttributeByJs(WebDriver driver, WebElement element, String attribute) {
+		jsExecutor = (JavascriptExecutor)driver;
+		jsExecutor.executeScript("arguments[0].removeAttribute('" + attribute + "');", element); 
 	}
 	
 	public void verifyText(String verifiedText, String expectedText) {
